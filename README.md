@@ -4,6 +4,10 @@ Interactive standard normal distribution explorer for z-score and shaded-area qu
 
 Live site:
 
+- `https://benhartlage.com/tools/normal-area/`
+
+Compatibility URL:
+
 - `https://rhartlage.github.io/normal-area-explorer/`
 
 Local files:
