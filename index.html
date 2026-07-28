@@ -16,15 +16,10 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tools.benhartlage.com/normal-area/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#explorer">Skip to explorer</a>
     <div class="page-shell">
       <header class="hero">
         <div>
@@ -37,7 +32,9 @@
         </p>
       </header>
 
-      <main class="workspace">
+      <p class="privacy-note">No sign-in, analytics, storage, external fonts, or transmitted student data.</p>
+
+      <main id="explorer" class="workspace">
         <div class="control-column">
           <div class="button-row return-link-row">
             <a
@@ -167,6 +164,26 @@
                 </button>
               </div>
             </section>
+
+            <section class="card">
+              <div class="card-head compact">
+                <div>
+                  <h3>Predict, then check</h3>
+                  <p>Estimate the shaded area before reading the exact result.</p>
+                </div>
+              </div>
+              <label for="estimateInput">
+                <span>Your probability estimate (0 to 1)</span>
+                <input id="estimateInput" type="number" min="0" max="1" step="0.001" inputmode="decimal" />
+              </label>
+              <div class="button-row">
+                <button id="checkEstimate" class="button" type="button">Check estimate</button>
+                <button id="resetStart" class="button button-secondary" type="button">Restore starting example</button>
+              </div>
+              <div id="estimateFeedback" class="practice-feedback" role="status" aria-live="polite">
+                Make a prediction, then compare it with the shaded region and exact probability.
+              </div>
+            </section>
           </section>
         </div>
 
@@ -213,6 +230,18 @@
                 <span class="status-label">Area</span>
                 <p id="answerText"></p>
               </article>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-head compact">
+              <div>
+                <h3>Static and accessible fallback</h3>
+                <p>
+                  All results are stated in text as well as shown graphically. Print this page or
+                  use Save as PDF; your instructor can also provide the equivalent static normal-table worksheet.
+                </p>
+              </div>
             </div>
           </section>
         </section>

@@ -9,6 +9,10 @@ const bControl = document.getElementById("bControl");
 const questionText = document.getElementById("questionText");
 const answerText = document.getElementById("answerText");
 const normalSvg = document.getElementById("normalSvg");
+const estimateInput = document.getElementById("estimateInput");
+const checkEstimate = document.getElementById("checkEstimate");
+const resetStart = document.getElementById("resetStart");
+const estimateFeedback = document.getElementById("estimateFeedback");
 
 const xMin = -3.7;
 const xMax = 3.7;
@@ -22,6 +26,7 @@ const handleThresholdPx = 18;
 
 let dragState = null;
 let currentModel = null;
+let currentProbability = null;
 
 function erf(x) {
   const sign = x < 0 ? -1 : 1;
@@ -237,6 +242,7 @@ function update() {
     segments: buildSegments(type, a, b),
     handles: buildHandles(type, a, b),
   };
+  currentProbability = percent;
 
   questionText.textContent = question;
   answerText.textContent = `Probability = ${percent.toFixed(4)} (${(percent * 100).toFixed(2)}%)`;
@@ -481,5 +487,31 @@ for (const btn of document.querySelectorAll(".examples button")) {
     update();
   });
 }
+
+checkEstimate.addEventListener("click", () => {
+  const estimate = Number(estimateInput.value);
+  if (!Number.isFinite(estimate) || estimate < 0 || estimate > 1) {
+    estimateFeedback.textContent = "Enter a probability from 0 through 1 before checking.";
+    return;
+  }
+
+  const error = Math.abs(estimate - currentProbability);
+  if (error <= 0.01) {
+    estimateFeedback.textContent = `Strong estimate: ${estimate.toFixed(3)} is within 0.01 of ${currentProbability.toFixed(4)}.`;
+  } else if (error <= 0.05) {
+    estimateFeedback.textContent = `Close: ${estimate.toFixed(3)} is within 0.05 of ${currentProbability.toFixed(4)}. Use the curve’s symmetry and tail size to refine it.`;
+  } else {
+    estimateFeedback.textContent = `Reconsider the shaded fraction: the exact probability is ${currentProbability.toFixed(4)}. Check whether you selected the intended tail or middle region.`;
+  }
+});
+
+resetStart.addEventListener("click", () => {
+  regionType.value = "right";
+  aSlider.value = "1.15";
+  bSlider.value = "1.45";
+  estimateInput.value = "";
+  estimateFeedback.textContent = "Starting example restored. Predict the area before checking.";
+  update();
+});
 
 update();

@@ -17,3 +17,8 @@ Local files:
 - `app.js`
 
 This is a standalone static web app with no build step.
+
+The app uses only local HTML, CSS, and JavaScript. It has no account, analytics,
+external font, storage, or student-data dependency. A reproducible starting
+example, text probability readout, prediction check, and print fallback support
+classroom and accessible use.
