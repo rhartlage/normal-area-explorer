@@ -9,8 +9,9 @@
   --panel-strong: rgba(255, 250, 242, 0.94);
   --accent: #2f6df6;
   --accent-soft: rgba(47, 109, 246, 0.26);
-  --accent-deep: #c74b30;
+  --accent-deep: #9f361f;
   --teal: #1f7a8c;
+  --focus: #005fcc;
   --gold: #f5a623;
   --gold-soft: rgba(245, 166, 35, 0.26);
   --gold-line: rgba(245, 166, 35, 0.46);
@@ -67,6 +68,8 @@ select {
 
 .skip-link:focus {
   top: 16px;
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .privacy-note {
@@ -266,8 +269,8 @@ select {
 .button:focus,
 input:focus,
 select:focus {
-  outline: 2px solid rgba(31, 122, 140, 0.35);
-  outline-offset: 2px;
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .button:disabled {
@@ -484,6 +487,21 @@ body.is-dragging #normalSvg {
 @media (max-width: 1160px) {
   .workspace {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .button:hover {
+    transform: none;
   }
 }
 
