@@ -514,3 +514,47 @@ body.is-dragging #normalSvg {
     white-space: normal;
   }
 }
+/* Teaching flow additions; scoped to preserve the shared course theme. */
+[hidden] { display: none !important; }
+.hero { grid-template-columns: minmax(0, 1fr) minmax(260px, 1fr); }
+.hero h1 { max-width: 18ch; font-size: clamp(2.2rem, 4vw, 3.8rem); line-height: 1.04; }
+.workspace { grid-template-columns: minmax(280px, 350px) minmax(0, 1fr); align-items: start; }
+.control-panel, .graph-panel { min-width: 0; padding: 22px; }
+.parameter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.parameter-grid label { min-width: 0; }
+.form-grid { gap: 15px; }
+.field-hint { color: var(--ink-soft); font-size: .85rem; line-height: 1.5; margin: 0; }
+.input-error { padding: 12px; border: 1px solid var(--danger); border-radius: 8px; color: var(--danger); background: #fff1f1; line-height: 1.45; }
+.slider-control { display: grid; gap: 8px; }
+input[type=range] { min-height: 24px; padding: 0; accent-color: var(--accent); }
+.graph-head { align-items: start; flex-wrap: wrap; }
+.graph-head .value-chip { font-size: .85rem; }
+.plot-shell { padding: 3px; }
+.plot-caption { margin: 0; font-size: .86rem; }
+#results { display: grid; gap: 18px; }
+#questionText { font-size: clamp(1.1rem, 2vw, 1.45rem); margin: 0; }
+.standard-question { color: var(--ink-soft); margin: 8px 0 12px; }
+#answerText { font-size: 1.05rem; margin: 8px 0 0; line-height: 1.5; }
+.working-card h3, .excel-card h3 { margin: 0; font-size: 1.2rem; }
+.working-steps { display: grid; gap: 18px; padding-left: 25px; margin-bottom: 0; }
+.working-steps li::marker { color: var(--accent); font-weight: 700; }
+.math-line { white-space: pre-line; overflow-wrap: anywhere; font-family: "Cambria Math", Cambria, Georgia, serif; font-size: 1.07rem; line-height: 1.6; margin: 5px 0 0; }
+.excel-formulas { display: grid; gap: 16px; margin: 18px 0; }
+.formula-group { min-width: 0; }
+.formula-group h4 { margin: 0 0 8px; color: var(--ink-soft); font-size: .85rem; }
+.formula-row { display: flex; gap: 8px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: rgba(255,255,255,.75); }
+.formula-row code { flex: 1; min-width: 0; overflow-wrap: anywhere; font: .91rem/1.6 Consolas, monospace; user-select: all; }
+.copy-button { border: 1px solid var(--line-strong); background: white; color: var(--ink); padding: 5px 9px; border-radius: 5px; cursor: pointer; font-size: .75rem; }
+.formula-result { margin: 5px 0 12px; font-size: .86rem; color: var(--ink-soft); }
+.excel-card > .field-hint + .field-hint { margin-top: 8px; }
+summary { cursor: pointer; font-weight: 700; }
+details[open] summary { margin-bottom: 16px; }
+.function-guide dt { font: bold .9rem Consolas, monospace; overflow-wrap: anywhere; }
+.function-guide dd { margin: 5px 0 18px; line-height: 1.5; }
+.function-guide p { font-size: .9rem; line-height: 1.55; color: var(--ink-soft); }
+#practicePanel .button { margin-top: 12px; }
+#estimateFeedback { font-size: .86rem; line-height: 1.5; }
+.return-link-button { display: inline-block; padding: 10px; font-size: .85rem; border-radius: 8px; }
+@media (max-width: 1000px) { .workspace { grid-template-columns: 1fr; } .hero { grid-template-columns: 1fr; } .control-panel > .form-grid { grid-template-columns: 1fr 1fr; align-items: start; } .parameter-grid, #inputError, #regionHint { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .control-panel > .form-grid { grid-template-columns: 1fr; } .control-panel, .graph-panel { padding: 15px; } .card { padding: 15px; } .page-shell { padding: 18px 10px; } .formula-row { padding: 9px; } .hero h1 { font-size: 2.5rem; } }
+@media print { .control-panel, .copy-button, .function-guide, #copyStatus { display: none !important; } .workspace { display: block; } .graph-panel { box-shadow: none; border: 0; padding: 0; } .hero { margin-bottom: 12px; } .hero h1 { font-size: 24pt; } .hero-copy, .privacy-note { display: none; } .card { break-inside: avoid; } .plot-shell { max-width: 650px; margin: auto; } }
