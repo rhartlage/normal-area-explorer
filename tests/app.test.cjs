@@ -203,3 +203,49 @@ test('central inverse probabilities that collapse both cutoffs report a precisio
   assert.equal(tool.el('inputError').hidden, false);
   assert.ok(tool.el('inputError').textContent);
 });
+
+function graphLabels(tool) {
+  return [...tool.el('normalSvg').innerHTML.matchAll(/<text class="cutoff-label"([^>]*)>([^<]*)<\/text>/g)].map(([, attributes, text]) => {
+    const attribute = name => Number(attributes.match(new RegExp(`(?:^|\\s)${name}="([^"]+)"`))[1]);
+    return { text, x: attribute('x'), y: attribute('y'), width: attribute('textLength'), fontSize: attribute('font-size') };
+  });
+}
+
+test('graph cutoff annotations stay separated for close, equal, and long boundary values', () => {
+  for (const [muInput, sigmaInput, aInput, bInput] of [
+    [100, 15, 98.96, 101.04], // Original overlap reported near the peak.
+    [100, 1, 100.000001, 100.000002],
+    [100, 15, 100, 100],
+    [0, 1, -3.9999, -3.9998],
+    [0, 1, 3.9998, 3.9999],
+    [-1000000, 1, -1000000.000002, -1000000.000001],
+    [1e100, 1e99, 1.01e100, 1.010000000000001e100],
+  ]) {
+    const tool = app().set({ regionType: 'between', muInput, sigmaInput, aInput, bInput });
+    assert.ok(tool.model, tool.el('inputError').textContent);
+    const labels = graphLabels(tool);
+    assert.equal(labels.length, 2);
+    assert.ok(labels[0].text.startsWith('Lower: '));
+    assert.ok(labels[1].text.startsWith('Upper: '));
+    assert.ok(labels[0].x + labels[0].width + 24 <= labels[1].x, JSON.stringify(labels));
+    for (const label of labels) {
+      assert.ok(label.x >= 0 && label.x + label.width <= 900);
+      assert.ok(label.y - label.fontSize >= 0 && label.y < 45);
+    }
+    // Leader paths keep the separated labels connected to their own cutoffs.
+    const leaders = [...tool.el('normalSvg').innerHTML.matchAll(/class="cutoff-leader" d="M ([\d.e+-]+) 35 L ([\d.e+-]+) ([\d.e+-]+)"/g)];
+    assert.equal(leaders.length, 2);
+    leaders.forEach((leader, i) => close(Number(leader[2]), tool.run(`toX(current.zs[${i}])`)));
+  }
+});
+
+test('graph annotations preserve distinct values and fit a single cutoff at either edge', () => {
+  const narrow = app().set({ muInput: 100, sigmaInput: 1, regionType: 'between', aInput: 100.000001, bInput: 100.000002 });
+  assert.deepEqual(graphLabels(narrow).map(label => label.text), ['Lower: 100.000001', 'Upper: 100.000002']);
+  for (const aInput of [-12, 12]) {
+    const tool = app().set({ muInput: -1e100, sigmaInput: 1e100, inputScale: 'z', aInput });
+    const [label] = graphLabels(tool);
+    assert.ok(label.x >= 55 && label.x + label.width <= 845);
+    assert.ok(label.y - label.fontSize >= 0 && label.y < 45);
+  }
+});

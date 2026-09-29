@@ -55,3 +55,12 @@ python -m http.server 4186 --bind 127.0.0.1
 Open `http://127.0.0.1:4186/` for a local preview. The public hosting repository
 `rhartlage/rhartlage.github.io` must pin the source commit and allowlist
 `normal-math.js` alongside `index.html`, `styles.css`, and `app.js`.
+
+## Layout controls
+
+On wide screens, drag the divider between setup and graph to resize the columns.
+The divider supports Left/Right arrows (Shift for larger steps), Home/End for the
+limits, and Enter or double-click to reset. Narrow screens stack the panels.
+Widths are kept only for the current page session. Cutoff annotations occupy
+separate slots above the curve so close or coincident boundaries stay readable.
+The hosted runtime allowlist must also include `layout.js`.
