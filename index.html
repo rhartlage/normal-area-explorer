@@ -20,7 +20,7 @@
       <p class="hero-copy">Connect an original value to its z-score, see the shaded area, and solve the same problem in Excel. Work forward from a value or backward from a probability.</p>
     </header>
     <main id="explorer" class="workspace">
-      <section class="panel control-panel" aria-labelledby="setupTitle">
+      <section id="setupPanel" class="panel control-panel" aria-labelledby="setupTitle">
         <div class="panel-head"><div><p class="section-kicker">1 / Set up the question</p><h2 id="setupTitle">Your normal model</h2></div></div>
         <div class="form-grid">
           <div class="parameter-grid">
@@ -68,7 +68,11 @@
         <div class="button-row"><button id="resetStart" class="button" type="button">Restore starting example</button></div>
         <div class="return-link-row"><a class="return-link-button" href="https://tools.benhartlage.com/">Return to Stats &amp; Operations Analysis</a></div>
       </section>
-      <section class="panel graph-panel" aria-labelledby="graphTitle">
+      <div id="columnResizer" class="column-resizer" role="separator" tabindex="0" aria-label="Resize setup and graph columns" aria-orientation="vertical" aria-controls="setupPanel graphPanel" aria-describedby="resizeHelp" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" title="Drag to resize columns. Arrow keys adjust; double-click or Enter resets.">
+        <span class="resize-grip" aria-hidden="true"></span>
+        <span id="resizeHelp" class="sr-only">Drag left or right to resize the columns. Use arrow keys for small changes, Home or End for the limits, and Enter to reset.</span>
+      </div>
+      <section id="graphPanel" class="panel graph-panel" aria-labelledby="graphTitle">
         <div class="panel-head graph-head"><div><p class="section-kicker">2 / See the connection</p><h2 id="graphTitle">Same area, different units</h2></div><span id="modelBadge" class="value-chip"></span></div>
         <div class="plot-shell"><svg id="normalSvg" viewBox="0 0 900 410" role="img" aria-label="Normal curve with original-value and z-score scales"></svg></div>
         <p id="plotCaption" class="plot-caption">Drag a cutoff or the shaded region. Both scales and the calculation update together.</p>
@@ -101,5 +105,6 @@
   </div>
   <script src="./normal-math.js"></script>
   <script src="./app.js"></script>
+  <script src="./layout.js"></script>
 </body>
 </html>

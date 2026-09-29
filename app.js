@@ -94,16 +94,29 @@ function curvePath(lo, hi, area = false) {
   for (let i=1;i<=points;i++) { const z=lo+(hi-lo)*i/points; s += ` L ${toX(z)} ${toY(z)}`; }
   return s + (area ? ` L ${toX(hi)} ${axisY} Z` : "");
 }
+function cutoffMarkup(m) {
+  const values = distinct(m.xs);
+  return m.zs.map((z, i) => {
+    if (Math.abs(z) > radius) return "";
+    const x = toX(z), y = toY(z);
+    const label = `${m.zs.length > 1 ? (i === 0 ? "Lower" : "Upper") : "Cutoff"}: ${values[i]}`;
+    // Keep annotations in the empty strip above the curve. Two boundaries get
+    // separate slots even when their markers coincide. Explicit text length
+    // makes each box predictable across fonts and uniform SVG resizing.
+    const slotLeft = m.zs.length > 1 && i === 1 ? width / 2 + 18 : leftPad;
+    const slotRight = m.zs.length > 1 && i === 0 ? width / 2 - 18 : width - leftPad;
+    const textWidth = Math.min(label.length * 9.6, slotRight - slotLeft);
+    const labelLeft = clamp(x - textWidth / 2, slotLeft, slotRight - textWidth);
+    const labelCenter = labelLeft + textWidth / 2;
+    return `<g class="cutoff-annotation" pointer-events="none"><line x1="${x}" x2="${x}" y1="${axisY}" y2="${y}" stroke="var(--accent-deep)" stroke-width="2" stroke-dasharray="5 4"/><circle cx="${x}" cy="${axisY}" r="8" fill="var(--accent-deep)" stroke="white" stroke-width="2"/><path class="cutoff-leader" d="M ${labelCenter} 35 L ${x} ${y - 4}" fill="none" stroke="var(--accent-deep)" stroke-width="1.4" opacity=".65"/><text class="cutoff-label" x="${labelLeft}" y="26" text-anchor="start" font-family="Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="700" textLength="${textWidth}" lengthAdjust="spacingAndGlyphs" fill="var(--ink)">${esc(label)}</text></g>`;
+  }).join("");
+}
 function draw(m) {
   radius = drag?.radius ?? Math.min(12, Math.max(4, Math.ceil(Math.max(...m.zs.map(Math.abs)) + 0.5)));
   let s = `<title>${esc($("questionText").textContent)}. ${esc($("answerText").textContent)}</title>${axisMarkup(m)}`;
   s += m.segments.map(([lo,hi])=>`<path d="${curvePath(lo,hi,true)}" fill="var(--accent-soft)"/>`).join("");
   s += `<path d="${curvePath(-radius,radius)}" fill="none" stroke="var(--accent)" stroke-width="3.5"/>`;
-  m.zs.forEach((z,i)=>{
-    if (Math.abs(z)>radius) return;
-    const x=toX(z);
-    s+=`<line x1="${x}" x2="${x}" y1="${axisY}" y2="${toY(z)}" stroke="var(--accent-deep)" stroke-width="2" stroke-dasharray="5 4"/><circle cx="${x}" cy="${axisY}" r="8" fill="var(--accent-deep)" stroke="white" stroke-width="2"/><text x="${x}" y="${Math.max(26,toY(z)-14)}" text-anchor="${x>780?'end':x<120?'start':'middle'}" font-size="16" font-weight="700" fill="var(--ink)">${m.zs.length>1?(i===0?'Lower':'Upper'):'Cutoff'}: ${esc(fmt(m.xs[i]))}</text>`;
-  });
+  s += cutoffMarkup(m);
   svg.innerHTML=s;
   const offScale=m.zs.some(z=>Math.abs(z)>radius);
   $("plotCaption").textContent = offScale ? "A cutoff is outside the displayed ±12 z range. The calculations still include the complete tails." : `${m.mode==="inverse" && m.zs.length>1 ? "Drag either cutoff to change the area while keeping the interval centered on μ." : "Drag a cutoff or the shaded region; the math and Excel formulas update together."} The x row shows original units; the z row shows standard deviations from μ. Tails continue beyond the plot.`;

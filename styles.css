@@ -518,7 +518,7 @@ body.is-dragging #normalSvg {
 [hidden] { display: none !important; }
 .hero { grid-template-columns: minmax(0, 1fr) minmax(260px, 1fr); }
 .hero h1 { max-width: 18ch; font-size: clamp(2.2rem, 4vw, 3.8rem); line-height: 1.04; }
-.workspace { grid-template-columns: minmax(280px, 350px) minmax(0, 1fr); align-items: start; }
+#explorer.workspace { grid-template-columns: minmax(280px, var(--controls-width, 350px)) 24px minmax(0, 1fr); gap: 0; align-items: start; }
 .control-panel, .graph-panel { min-width: 0; padding: 22px; }
 .parameter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .parameter-grid label { min-width: 0; }
@@ -555,6 +555,17 @@ details[open] summary { margin-bottom: 16px; }
 #practicePanel .button { margin-top: 12px; }
 #estimateFeedback { font-size: .86rem; line-height: 1.5; }
 .return-link-button { display: inline-block; padding: 10px; font-size: .85rem; border-radius: 8px; }
-@media (max-width: 1000px) { .workspace { grid-template-columns: 1fr; } .hero { grid-template-columns: 1fr; } .control-panel > .form-grid { grid-template-columns: 1fr 1fr; align-items: start; } .parameter-grid, #inputError, #regionHint { grid-column: 1 / -1; } }
+@media (max-width: 1000px) { #explorer.workspace { grid-template-columns: 1fr; gap: 22px; } .column-resizer { display: none; } .hero { grid-template-columns: 1fr; } .control-panel > .form-grid { grid-template-columns: 1fr 1fr; align-items: start; } .parameter-grid, #inputError, #regionHint { grid-column: 1 / -1; } }
 @media (max-width: 600px) { .control-panel > .form-grid { grid-template-columns: 1fr; } .control-panel, .graph-panel { padding: 15px; } .card { padding: 15px; } .page-shell { padding: 18px 10px; } .formula-row { padding: 9px; } .hero h1 { font-size: 2.5rem; } }
-@media print { .control-panel, .copy-button, .function-guide, #copyStatus { display: none !important; } .workspace { display: block; } .graph-panel { box-shadow: none; border: 0; padding: 0; } .hero { margin-bottom: 12px; } .hero h1 { font-size: 24pt; } .hero-copy, .privacy-note { display: none; } .card { break-inside: avoid; } .plot-shell { max-width: 650px; margin: auto; } }
+@media print { .column-resizer, .control-panel, .copy-button, .function-guide, #copyStatus { display: none !important; } .workspace { display: block; } .graph-panel { box-shadow: none; border: 0; padding: 0; } .hero { margin-bottom: 12px; } .hero h1 { font-size: 24pt; } .hero-copy, .privacy-note { display: none; } .card { break-inside: avoid; } .plot-shell { max-width: 650px; margin: auto; } }
+
+/* The gutter is a full-height drag target; the grip stays visible while scrolling. */
+.column-resizer { position: relative; align-self: stretch; min-width: 24px; cursor: col-resize; touch-action: none; user-select: none; color: var(--ink-soft); border-radius: 8px; }
+.column-resizer::before { content: ""; position: absolute; top: 16px; bottom: 16px; left: 11px; width: 2px; background: var(--line); transition: background .15s; }
+.resize-grip { position: sticky; top: 42vh; display: block; width: 8px; height: 52px; margin: 20px auto 0; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--panel-strong); box-shadow: 0 0 0 3px var(--bg); }
+.resize-grip::after { content: ""; position: absolute; top: 15px; left: 2px; width: 2px; height: 20px; border-radius: 2px; background: currentColor; }
+.column-resizer:hover, .column-resizer:focus-visible, .is-resizing-columns .column-resizer { color: var(--accent); background: var(--accent-soft); }
+.column-resizer:hover::before, .column-resizer:focus-visible::before { background: var(--accent); }
+.column-resizer:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+body.is-resizing-columns, body.is-resizing-columns * { cursor: col-resize !important; user-select: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
